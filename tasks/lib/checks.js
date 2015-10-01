@@ -11,11 +11,15 @@
 exports.init = function(grunt) {
 
     // Whether the checks passed or failed. (true for passed)
-    exports.passed = true;
+    exports.passedAllChecks = true;
+
+    // Local array for keeping results of target checks.
+    var passed = [];
 
     // Reset the result, so that it doesn't get passed into a different sub-test.
     var resetResult = function() {
-        exports.passed = true;
+        exports.passedAllChecks = true;
+        passed.length = 0;
     };
 
     // Get the files to check on.
@@ -55,26 +59,69 @@ exports.init = function(grunt) {
     exports.hyperlinks = function(data, files) {
         resetResult();
 
+        var pattern;
+
         if(data.hashed) {
-            var pattern = /href="#"/gi;
-            exports.passed = checkFilesForPattern(files, pattern, 'Hashed hyperlinks');
+            pattern = /href="#"/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Hashed hyperlinks'));
         }
 
-        if(data.broken) {
-            grunt.log.writeln("@todo - Broken hyperlinks");
-        }
+        if(data.broken) {}
+
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
     };
 
     exports.colour = function(data) {
         resetResult();
     };
 
-    exports.images = function(data) {
+    exports.images = function(data, files) {
         resetResult();
+
+        var pattern;
+
+        if(data.alt.missing) {
+            pattern = /<img(?![^>]*\balt=)[^>]*?>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Missing image alt attributes'));
+        }
+
+        if(data.alt.empty) {
+            pattern = /<img(.*)\balt=""(.*)>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Empty image alt attributes'));
+        }
+
+        if(data.source.missing) {
+            pattern = /<img(?![^>]*\bsrc=)[^>]*?>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Missing image src attributes'));
+        }
+
+        if(data.source.empty) {
+            pattern = /<img(.*)\bsrc=""(.*)>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Empty image src attributes'));
+        }
+
+        if(data.source.hashed) {
+            pattern = /<img(.*)\bsrc="#"(.*)>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Hashed image src attributes'));
+        }
+
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
     };
 
-    exports.styles = function(data) {
+    exports.styles = function(data, files) {
         resetResult();
+
+        var pattern;
+
+        if(data.inline) {
+            pattern = /style=/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Inline style attributes'));
+
+            pattern = /<style>/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Inline style elements'));
+        }
+
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
     };
 
     exports.pagespeed = function(data) {

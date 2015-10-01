@@ -28,11 +28,11 @@ module.exports = function(grunt) {
                 break;
 
             case 'images':
-                checks.images(this.data);
+                checks.images(this.data, this.files);
                 break;
 
             case 'styles':
-                checks.styles(this.data);
+                checks.styles(this.data, this.files);
                 break;
 
             case 'pagespeed':
@@ -40,11 +40,14 @@ module.exports = function(grunt) {
                 break;
         }
 
-        if(checks.passed) {
+        if(checks.passedAllChecks) {
             grunt.log.writeln("Checks passed");
         } else {
             grunt.warn("Checks failed");
         }
     });
+
+    // Register the default task.
+    grunt.registerTask('default', 'checks');
 
 };

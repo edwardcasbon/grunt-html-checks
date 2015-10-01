@@ -27,7 +27,7 @@ module.exports = function(grunt) {
             // Check colour references.
             colour: {
                 honeycomb: true, // Check colour references match Honeycomb palette.
-                src: ['*.htm', '*/*.html']  // Source files to check against.
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
             },
 
             // Check image elements.
@@ -41,12 +41,12 @@ module.exports = function(grunt) {
                     empty: true,    // Check for empty image src tags.
                     hashed: true    // Check for hashed image src tags.
                 },
-                src: ['*.htm', '*/*.html']  // Source files to check against.
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
             },
 
             styles: {
                 inline: true,   // Check for inline style tags.
-                src: ['*.htm', '*/*.html']  // Source files to check against.
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
             },
 
             // Check against Google pagespeed insights.

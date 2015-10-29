@@ -36,6 +36,7 @@ exports.init = function(grunt) {
     // Check files for a pattern, and return whether the file passed.
     var checkFilesForPattern = function(files, pattern, human) {
         var matches = null;
+        var matched = false;
 
         files = getFiles(files).forEach(function(file) {
 
@@ -46,14 +47,15 @@ exports.init = function(grunt) {
             matches = content.match(pattern);
 
             if(matches) {
-                var instances = (matches > 1) ? "instances" : "instance";
+                var instances = (matches.length > 1) ? "instances" : "instance";
                 grunt.log.error("Check failed, on " + matches.length + " " + instances + ", for '" + human + "', in file '" + file + "'.");
+                matched = true;
             }
 
         });
 
         // Return whether the check passed or failed.
-        return (matches === null) ? true : false;
+        return !matched;
     };
 
     exports.hyperlinks = function(data, files) {

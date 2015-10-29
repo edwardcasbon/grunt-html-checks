@@ -1,7 +1,29 @@
 {
-  "name": "grunt-checks",
+  "name": "grunt-html-checks",
   "description": "A multi-task Grunt task for simple HTML checks.",
   "version": "0.1.0",
+  "homepage": "https://github.com/edward.casbon/grunt-html-checks",
+  "author": {
+    "name": "Edward Casbon",
+    "email": "edward@edwardcasbon.co.uk",
+    "url": "http://www.edwardcasbon.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/edward.casbon/grunt-html-checks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/edward.casbon/grunt-html-checks/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/edward.casbon/grunt-html-checks/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
   "devDependencies": {
     "grunt": "^0.4.5"
   }

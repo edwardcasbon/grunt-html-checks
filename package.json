@@ -1,7 +1,7 @@
 {
   "name": "grunt-html-checks",
   "description": "A multi-task Grunt task for simple HTML checks.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/edwardcasbon/grunt-html-checks",
   "author": {
     "name": "Edward Casbon",

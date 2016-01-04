@@ -24,12 +24,6 @@ module.exports = function(grunt) {
                 src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
             },
 
-            // Check colour references.
-            colour: {
-                honeycomb: true, // Check colour references match Honeycomb palette.
-                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
-            },
-
             // Check image elements.
             images: {
                 alt: {
@@ -46,6 +40,37 @@ module.exports = function(grunt) {
 
             styles: {
                 inline: true,   // Check for inline style tags.
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
+            },
+
+            // Check that Google Analytics event tracking attributes exist.
+            gaTracking: {
+                enabled: true,
+                category: {
+                    missing: true,
+                    empty: true
+                },
+                action: {
+                    missing: true,
+                    empty: true
+                },
+                label: {
+                    missing: true,
+                    empty: true
+                },
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
+            },
+
+            // Check meta.
+            meta: {
+                maxTitleLength: 55,
+                maxDescriptionLength: 150,
+                src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
+            },
+
+            // Check colour references.
+            colour: {
+                honeycomb: true, // Check colour references match Honeycomb palette.
                 src: ['**/*.htm', '**/*.html', '!node_modules/**/*']  // Source files to check against.
             },
 

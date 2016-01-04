@@ -11,14 +11,14 @@
 exports.init = function(grunt) {
 
     // Whether the checks passed or failed. (true for passed)
-    exports.passedAllChecks = true;
+    exports.passedAllChecks = false;
 
     // Local array for keeping results of target checks.
     var passed = [];
 
     // Reset the result, so that it doesn't get passed into a different sub-test.
     var resetResult = function() {
-        exports.passedAllChecks = true;
+        exports.passedAllChecks = false;
         passed.length = 0;
     };
 
@@ -32,6 +32,11 @@ exports.init = function(grunt) {
         });
         return files;
     };
+
+    var logFailedTest = function(numInstances, humanReadableMessage, file) {
+        var instances = (numInstances > 1) ? "instances" : "instance";
+        grunt.log.error("Check failed, on " + numInstances + " " + instances + ", for '" + humanReadableMessage + "', in file '" + file + "'.");
+    }
 
     // Check files for a pattern, and return whether the file passed.
     var checkFilesForPattern = function(files, pattern, human) {
@@ -47,8 +52,7 @@ exports.init = function(grunt) {
             matches = content.match(pattern);
 
             if(matches) {
-                var instances = (matches.length > 1) ? "instances" : "instance";
-                grunt.log.error("Check failed, on " + matches.length + " " + instances + ", for '" + human + "', in file '" + file + "'.");
+                logFailedTest(matches.length, human, file);
                 matched = true;
             }
 
@@ -71,10 +75,6 @@ exports.init = function(grunt) {
         if(data.broken) {}
 
         exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
-    };
-
-    exports.colour = function(data) {
-        resetResult();
     };
 
     exports.images = function(data, files) {
@@ -126,8 +126,101 @@ exports.init = function(grunt) {
         exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
     };
 
-    exports.pagespeed = function(data) {
+    exports.meta = function(data, files) {
         resetResult();
+        var count = 0;
+        var pattern;
+        var match;
+
+        var files = getFiles(files).forEach(function(file) {
+            var content = grunt.file.read(file);
+
+            // Title length.
+            if(data.maxTitleLength) {
+                pattern = /<title[^>]*>([^<]+)<\/title>/gi;
+                count = 0;
+                while((match = pattern.exec(content)) !== null) {
+                    if(match[1].length > data.maxTitleLength) {
+                        passed.push(false);
+                        count++;
+                    } else {
+                        passed.push(true);
+                    }
+                }
+
+                if(count > 0) {
+                    logFailedTest(count, 'Meta title exceeds max title length', file);
+                }
+            }
+
+            // Description length.
+            if(data.maxDescriptionLength) {
+                pattern = /<meta.*?name="description".*?content="(.*?)".*?>|<meta.*?content="(.*?)".*?name="description".*?>/gi;
+                count = 0;
+                while((match = pattern.exec(content)) !== null) {
+                    if(match[1].length > data.maxDescriptionLength) {
+                        passed.push(false);
+                        count++;
+                    } else {
+                        passed.push(true);
+                    }
+                }
+
+                if(count > 0) {
+                    logFailedTest(count, 'Meta description exceeds max description length', file);
+                }
+            }
+        });
+
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
+    };
+
+    exports.gaTracking = function(data, files) {
+        resetResult();
+        var pattern;
+
+        if(data.enabled === false) {
+            grunt.log.writeln("Skipping, as disabled in configuration");
+            exports.passedAllChecks = true;
+            return false;
+        }
+
+        if(data.category.missing) {}
+
+        if(data.category.empty) {
+            pattern = /data-ga-track-category=""/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Empty GA tracking category attributes'));
+        }
+
+        if(data.action.missing) {}
+
+        if(data.action.empty) {
+            pattern = /data-ga-track-action=""/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Empty GA tracking action attributes'));
+        }
+
+        if(data.label.missing) {}
+
+        if(data.label.empty) {
+            pattern = /data-ga-track-label=""/gi;
+            passed.push(checkFilesForPattern(files, pattern, 'Empty GA tracking label attributes'));
+        }
+
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
+    }
+
+    exports.colour = function(data) {
+        grunt.log.writeln("@TODO - Finish test");
+
+        resetResult();
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
+    };
+
+    exports.pagespeed = function(data) {
+        grunt.log.writeln("@TODO - Finish test");
+
+        resetResult();
+        exports.passedAllChecks = (passed.indexOf(false) === -1) ? true : false;
     };
 
     return exports;

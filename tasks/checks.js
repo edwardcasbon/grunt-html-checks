@@ -23,16 +23,24 @@ module.exports = function(grunt) {
                 checks.hyperlinks(this.data, this.files);
                 break;
 
-            case 'colour':
-                checks.colour(this.data);
-                break;
-
             case 'images':
                 checks.images(this.data, this.files);
                 break;
 
             case 'styles':
                 checks.styles(this.data, this.files);
+                break;
+
+            case 'meta':
+                checks.meta(this.data, this.files);
+                break;
+
+            case 'gaTracking':
+                checks.gaTracking(this.data, this.files);
+                break;
+
+            case 'colour':
+                checks.colour(this.data);
                 break;
 
             case 'pagespeed':
